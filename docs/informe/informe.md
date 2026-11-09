@@ -224,7 +224,7 @@ El sistema ofrece una interacción directa orientada al desarrollador de softwar
 | Código | Caso de Uso | Descripción |
 |---|---|---|
 | CU-01 | Cargar proyecto Python | El usuario indica la ruta del proyecto; el escáner identifica módulos y construye el modelo. |
-| CU-02 | Ver grafo de dependencias | Muestra en consola el resumen de módulos |V|, dependencias |E| y exporta el gráfico PNG. |
+| CU-02 | Ver grafo de dependencias | Muestra en consola el resumen de módulos card(V), dependencias card(E) y exporta el gráfico PNG. |
 | CU-03 | Detectar ciclos | Ejecuta el algoritmo de Johnson e imprime la lista de circuitos de importación circular. |
 | CU-04 | Consultar valencias | Muestra el reporte detallado de grado de entrada δₑ y salida δₛ por cada módulo. |
 | CU-05 | Obtener orden de construcción | Genera la lista ordenada de carga o reporta la imposibilidad ante ciclos presentes. |
@@ -263,10 +263,10 @@ La complejidad temporal y espacial de las operaciones implementadas sobre G = (V
 | Operación | Concepto Matemático | Función en código | Complejidad |
 |---|---|---|---|
 | Escaneo de código | Parseo de gramática formal libre de contexto | `scanner.scan_project` | O(K), donde K es el tamaño total de líneas de código |
-| Detección de ciclos | Circuitos elementales de Johnson | `model.find_cycles` | O((|V| + |E|)(c + 1)), con c ciclos simples |
-| Secuencia de carga | Orden topológico lexicográfico | `model.topological_order` | O(|V| + |E|) |
-| Rastreo de dependencias | Camino simple más corto (BFS) | `model.shortest_dependency_path` | O(|V| + |E|) |
-| Impacto transitivo | Subgrafo inducido por descendencia | `model.dependency_subgraph` | O(|V| + |E|) |
+| Detección de ciclos | Circuitos elementales de Johnson | `model.find_cycles` | O((n + m)(c + 1)), con c ciclos simples |
+| Secuencia de carga | Orden topológico lexicográfico | `model.topological_order` | O(n + m) |
+| Rastreo de dependencias | Camino simple más corto (BFS) | `model.shortest_dependency_path` | O(n + m) |
+| Impacto transitivo | Subgrafo inducido por descendencia | `model.dependency_subgraph` | O(n + m) |
 
 ### Ejemplo Numérico Demostrativo (Proyecto `tienda`)
 
@@ -446,7 +446,7 @@ python -m grafodeps.cli examples --from tienda.carrito --out subgrafo_carrito.pn
 | Detección de errores sintácticos | `test_syntax_error_is_reported` | Archivo con sintaxis inválida `def (:` | Lanza excepción `SyntaxError` controlada |
 | Detección de circuitos | `test_cycle_detected` | Proyecto `sample_project` | Detecta ciclo entre `pricing` y `tax` |
 | Orden topológico | `test_topological_order_none_when_cyclic_and_valid_when_acyclic` | Digrafo acíclico y cíclico | Retorna None si hay ciclo; orden lineal si es DAG |
-| Conservación de valencias | `test_degrees_sum_equals_edge_count` | Proyecto con 6 aristas | Σ δₑ = Σ δₛ = \|E\| |
+| Conservación de valencias | `test_degrees_sum_equals_edge_count` | Proyecto con 6 aristas | Σ δₑ = Σ δₛ = card(E) |
 | Camino mínimo y subgrafo | `test_shortest_path_and_subgraph` | Módulos `main` e `impuestos` | Encuentra trayectoria de longitud 3 y subgrafo conexo |
 | Exportación de imagen | `test_draw_writes_png` | Grafo de 2 nodos | Archivo `.png` generado con tamaño > 3 KB |
 | Ejecución CLI integral | `test_cli_end_to_end` | Argumentos `--out` y `--path` | Retorna código 0 y salida con ciclo detectado |

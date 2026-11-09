@@ -22,6 +22,7 @@ def build(md_path, out_path):
     doc = Document()
     lines = md_path.read_text(encoding="utf-8").splitlines()
     i, in_cover, first_cover = 0, True, True
+    in_code = False
     while i < len(lines):
         line = lines[i].rstrip()
         if line.startswith("# ") and in_cover:
@@ -33,6 +34,14 @@ def build(md_path, out_path):
                     doc.add_heading(line.strip(), 0); first_cover = False
                 else:
                     doc.add_paragraph(line.strip())
+            i += 1
+            continue
+        if line.startswith("```"):
+            in_code = not in_code
+            i += 1
+            continue
+        if in_code:
+            doc.add_paragraph(line)
             i += 1
             continue
         m = re.match(r"^(#{1,3}) (.+)$", line)
