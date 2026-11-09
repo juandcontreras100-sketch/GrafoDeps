@@ -1,0 +1,4 @@
+networkx
+matplotlib
+python-docx
+pytest
