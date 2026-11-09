@@ -1,0 +1,59 @@
+﻿Módulos |V| = 8   Dependencias |E| = 8
+Dependencias circulares: 1
+  tienda.impuestos -> tienda.precios -> tienda.impuestos
+Orden de construcción: no existe (hay ciclos)
+Valencias (entrada/salida):
+  tienda: δe=0 δs=0
+  tienda.carrito: δe=1 δs=2
+  tienda.impuestos: δe=1 δs=1
+  tienda.inventario: δe=1 δs=1
+  tienda.main: δe=0 δs=2
+  tienda.notificaciones: δe=2 δs=0
+  tienda.precios: δe=2 δs=1
+  tienda.usuarios: δe=1 δs=1
+Imagen guardada en docs/informe/img/grafo_demo.png
+Módulos |V| = 8   Dependencias |E| = 8
+Dependencias circulares: 1
+  tienda.impuestos -> tienda.precios -> tienda.impuestos
+Orden de construcción: no existe (hay ciclos)
+Valencias (entrada/salida):
+  tienda: δe=0 δs=0
+  tienda.carrito: δe=1 δs=2
+  tienda.impuestos: δe=1 δs=1
+  tienda.inventario: δe=1 δs=1
+  tienda.main: δe=0 δs=2
+  tienda.notificaciones: δe=2 δs=0
+  tienda.precios: δe=2 δs=1
+  tienda.usuarios: δe=1 δs=1
+Camino: tienda.main -> tienda.carrito -> tienda.precios -> tienda.impuestos
+Módulos |V| = 22   Dependencias |E| = 16
+Dependencias circulares: 0
+Orden de construcción: grafodeps.scanner , tests.test_scanner , grafodeps.model , grafodeps.render , grafodeps.cli , tests.test_render_cli , tests.conftest , tests.test_performance , tests.test_model , tests , scripts.make_demo , scripts.benchmark , scripts , grafodeps , examples.tienda.usuarios , examples.tienda.impuestos , examples.tienda.precios , examples.tienda.notificaciones , examples.tienda.main , examples.tienda.inventario , examples.tienda.carrito , examples.tienda
+Valencias (entrada/salida):
+  examples.tienda: δe=0 δs=0
+  examples.tienda.carrito: δe=0 δs=0
+  examples.tienda.impuestos: δe=1 δs=0
+  examples.tienda.inventario: δe=0 δs=0
+  examples.tienda.main: δe=0 δs=0
+  examples.tienda.notificaciones: δe=0 δs=0
+  examples.tienda.precios: δe=0 δs=1
+  examples.tienda.usuarios: δe=0 δs=0
+  grafodeps: δe=0 δs=0
+  grafodeps.cli: δe=1 δs=3
+  grafodeps.model: δe=6 δs=0
+  grafodeps.render: δe=2 δs=1
+  grafodeps.scanner: δe=5 δs=0
+  scripts: δe=0 δs=0
+  scripts.benchmark: δe=0 δs=2
+  scripts.make_demo: δe=0 δs=0
+  tests: δe=0 δs=0
+  tests.conftest: δe=1 δs=0
+  tests.test_model: δe=0 δs=2
+  tests.test_performance: δe=0 δs=3
+  tests.test_render_cli: δe=0 δs=3
+  tests.test_scanner: δe=0 δs=1
+Imagen guardada en docs/informe/img/grafo_autoanalisis.png
+Módulos: 51  Aristas: 144
+Tiempo medio de 5 corridas: 0.0150 s   (RNF-01: < 5 s)
+............                                                             [100%]
+12 passed in 1.18s
