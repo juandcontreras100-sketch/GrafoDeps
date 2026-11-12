@@ -15,7 +15,9 @@ def test_topological_order_none_when_cyclic_and_valid_when_acyclic():
     cyc = model.build_digraph(["a", "b"], [("a", "b"), ("b", "a")])
     assert model.topological_order(cyc) is None
     dag = model.build_digraph(["a", "b", "c"], [("a", "b"), ("b", "c")])
-    assert model.topological_order(dag) == ["c", "b", "a"]  # dependencias primero
+    order = model.topological_order(dag)
+    assert order == ["a", "b", "c"]
+    assert all(order.index(source) < order.index(target) for source, target in dag.edges)
 
 
 def test_degrees_sum_equals_edge_count(sample_project):

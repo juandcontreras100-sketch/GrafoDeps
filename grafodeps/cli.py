@@ -26,6 +26,12 @@ def run(argv: list[str] | None = None) -> int:
         print("No se encontraron módulos .py", file=sys.stderr)
         return 1
     g = model.build_digraph(modules, edges)
+    if args.root_module:
+        if args.root_module not in g:
+            print(f"Módulo desconocido: {args.root_module}", file=sys.stderr)
+            return 2
+        g = model.dependency_subgraph(g, args.root_module)
+
     print(f"Módulos |V| = {g.number_of_nodes()}   Dependencias |E| = {g.number_of_edges()}")
 
     cycles = model.find_cycles(g)
@@ -33,21 +39,16 @@ def run(argv: list[str] | None = None) -> int:
     for c in cycles:
         print("  " + " -> ".join(c + [c[0]]))
     order = model.topological_order(g)
-    print("Orden de construcción: " + (" , ".join(order) if order else "no existe (hay ciclos)"))
+    build_order = list(reversed(order)) if order else None
+    print("Orden de construcción: " + (" , ".join(build_order) if build_order else "no existe (hay ciclos)"))
     print("Valencias (entrada/salida):")
     for v, d in model.degree_report(g).items():
         print(f"  {v}: δe={d['in']} δs={d['out']}")
     if args.path:
         p = model.shortest_dependency_path(g, *args.path)
         print("Camino: " + (" -> ".join(p) if p else "no existe"))
-    shown = g
-    if args.root_module:
-        if args.root_module not in g:
-            print(f"Módulo desconocido: {args.root_module}", file=sys.stderr)
-            return 2
-        shown = model.dependency_subgraph(g, args.root_module)
     if args.out:
-        render.draw(shown, args.out)
+        render.draw(g, args.out)
         print(f"Imagen guardada en {args.out}")
     return 0
 

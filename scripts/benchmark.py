@@ -6,6 +6,8 @@ from pathlib import Path
 from grafodeps import model
 from grafodeps.scanner import scan_project
 
+LIMIT_SECONDS = 5.0
+
 
 def make_project(root: Path, n: int = 50) -> None:
     (root / "big").mkdir(parents=True)
@@ -27,3 +29,6 @@ if __name__ == "__main__":
             runs.append(time.perf_counter() - t)
         print(f"Módulos: {g.number_of_nodes()}  Aristas: {g.number_of_edges()}")
         print(f"Tiempo medio de 5 corridas: {sum(runs) / len(runs):.4f} s   (RNF-01: < 5 s)")
+        print(f"Tiempo máximo de 5 corridas: {max(runs):.4f} s")
+        if max(runs) >= LIMIT_SECONDS:
+            raise SystemExit(f"RNF-01 incumplido: una corrida tomó {max(runs):.4f} s")

@@ -25,10 +25,10 @@ def degree_report(g: nx.DiGraph) -> dict[str, dict[str, int]]:
 
 
 def topological_order(g: nx.DiGraph) -> list[str] | None:
-    """Orden de construcción (dependencias primero); None si hay ciclos."""
+    """Ordena los vértices para que cada origen preceda a sus destinos; None si hay ciclos."""
     if not nx.is_directed_acyclic_graph(g):
         return None
-    return list(reversed(list(nx.lexicographical_topological_sort(g))))
+    return list(nx.lexicographical_topological_sort(g))
 
 
 def shortest_dependency_path(g: nx.DiGraph, src: str, dst: str) -> list[str] | None:

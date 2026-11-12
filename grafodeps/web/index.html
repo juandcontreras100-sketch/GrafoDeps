@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explora localmente las dependencias entre módulos Python con GrafoDeps.">
+  <title>GrafoDeps · Explorador</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="GrafoDeps, inicio">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span><strong>GrafoDeps</strong><small>EXPLORADOR DE DEPENDENCIAS</small></span>
+    </a>
+    <div class="local-badge"><span aria-hidden="true"></span> Análisis local · tus archivos no salen de este equipo</div>
+  </header>
+
+  <main class="shell">
+    <section class="page-heading" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">MATEMÁTICAS DISCRETAS · INGENIERÍA DE SOFTWARE</p>
+        <h1 id="page-title">Explora la estructura de tu proyecto</h1>
+        <p class="lede">Cada flecha representa una importación interna: del módulo que importa al módulo importado.</p>
+      </div>
+      <button id="export-button" class="button button-secondary" type="button" disabled>
+        <span aria-hidden="true">↓</span> Exportar PNG
+      </button>
+    </section>
+
+    <form id="project-form" class="project-bar">
+      <label for="project-path">Carpeta del proyecto Python</label>
+      <div class="project-controls">
+        <span class="path-icon" aria-hidden="true">⌁</span>
+        <input id="project-path" name="project" type="text" value="examples" maxlength="4096"
+               autocomplete="off" spellcheck="false" aria-describedby="path-help">
+        <button id="demo-button" class="button button-quiet" type="button">Cargar ejemplo</button>
+        <button id="analyze-button" class="button button-primary" type="submit">Analizar proyecto</button>
+      </div>
+      <p id="path-help" class="helper">Escribe una ruta local, por ejemplo <code>examples</code> o <code>C:\proyectos\tienda</code>.</p>
+    </form>
+
+    <div id="status" class="status" role="status" aria-live="polite">Cargando el proyecto de ejemplo…</div>
+
+    <section class="metrics" aria-label="Resumen del análisis">
+      <article class="metric"><span class="metric-label">MÓDULOS</span><strong id="module-count">—</strong><span>vértices del grafo</span></article>
+      <article class="metric"><span class="metric-label">DEPENDENCIAS</span><strong id="edge-count">—</strong><span>aristas dirigidas</span></article>
+      <article class="metric metric-cycle"><span class="metric-label">CICLOS</span><strong id="cycle-count">—</strong><span>circuitos simples</span></article>
+      <article class="metric"><span class="metric-label">PROYECTO</span><strong id="project-name" class="project-name">—</strong><span>carpeta analizada</span></article>
+    </section>
+
+    <section class="workspace" aria-label="Explorador del grafo">
+      <aside class="sidebar panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">EXPLORAR</p><h2>Módulos</h2></div>
+          <span id="visible-count" class="count-pill">0</span>
+        </div>
+        <label class="search-box" for="module-search">
+          <span aria-hidden="true">⌕</span>
+          <input id="module-search" type="search" placeholder="Buscar módulo…" autocomplete="off" disabled>
+        </label>
+        <p class="section-caption">SELECCIONA PARA VER SUS DEPENDENCIAS</p>
+        <ul id="module-list" class="module-list" aria-label="Módulos del proyecto"></ul>
+        <div class="sidebar-divider"></div>
+        <div class="panel-heading cycle-heading">
+          <div><p class="eyebrow">CIRCUITOS</p><h2>Ciclos detectados</h2></div>
+          <span id="cycle-list-count" class="count-pill count-alert">0</span>
+        </div>
+        <ul id="cycle-list" class="cycle-list" aria-label="Ciclos detectados"></ul>
+      </aside>
+
+      <section class="graph-panel panel" aria-labelledby="graph-title">
+        <div class="graph-toolbar">
+          <div><p class="eyebrow">VISUALIZACIÓN</p><h2 id="graph-title">Grafo de dependencias</h2></div>
+          <button id="clear-focus" class="text-button" type="button" disabled>Restablecer vista</button>
+        </div>
+        <div id="graph-empty" class="graph-empty">
+          <span class="empty-icon" aria-hidden="true">↗</span>
+          <strong>Tu grafo aparecerá aquí</strong>
+          <span>Analiza una carpeta para comenzar a explorar.</span>
+        </div>
+        <div id="graph-wrap" class="graph-wrap" hidden>
+          <svg id="graph" role="img" aria-label="Grafo dirigido de importaciones entre módulos"
+               viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div class="graph-legend">
+          <span><i class="legend-dot legend-module"></i>Módulo</span>
+          <span><i class="legend-dot legend-selected"></i>Módulo seleccionado</span>
+          <span><i class="legend-dot legend-cycle"></i>Módulo en un ciclo</span>
+        </div>
+      </section>
+
+      <aside class="details panel" aria-labelledby="details-title">
+        <p class="eyebrow">INSPECTOR</p>
+        <h2 id="details-title">Detalle del módulo</h2>
+        <div id="detail-empty" class="detail-empty">Selecciona un módulo o un ciclo para consultar sus relaciones.</div>
+        <div id="detail-content" hidden>
+          <p id="detail-kind" class="detail-kind">MÓDULO</p>
+          <h3 id="detail-name" class="detail-name"></h3>
+          <section id="code-analysis" class="code-analysis" aria-labelledby="code-analysis-title">
+            <h4 id="code-analysis-title">¿Qué hace este módulo?</h4>
+            <p id="module-summary" class="module-summary"></p>
+            <ul id="definition-list" class="definition-list"></ul>
+            <p id="analysis-note" class="analysis-note"></p>
+          </section>
+          <section class="import-relations" aria-label="Importaciones del módulo">
+            <div class="relation-group">
+              <h4>Importaciones directas</h4>
+              <p class="relation-summary">Módulos internos que este módulo importa.</p>
+              <ul id="direct-import-list" class="relation-list"></ul>
+            </div>
+            <div class="relation-group">
+              <h4>Importado directamente por</h4>
+              <p class="relation-summary">Módulos internos que importan este módulo.</p>
+              <ul id="imported-by-list" class="relation-list"></ul>
+            </div>
+          </section>
+          <div id="module-stats" class="degree-grid">
+            <div><span>Importado por</span><strong id="in-degree">0</strong></div>
+            <div><span>Importa a</span><strong id="out-degree">0</strong></div>
+          </div>
+          <div class="relation-group">
+            <h4 id="relation-title">Dependencias alcanzables</h4>
+            <p id="relation-summary" class="relation-summary"></p>
+            <ul id="relation-list" class="relation-list"></ul>
+          </div>
+        </div>
+        <p class="direction-note"><strong>Dirección:</strong> origen → destino significa “el origen importa al destino”.</p>
+      </aside>
+    </section>
+
+    <footer class="footer-note">
+      GrafoDeps analiza importaciones estáticas reconocidas; no ejecuta el proyecto ni detecta de forma completa importaciones dinámicas.
+    </footer>
+  </main>
+</body>
+</html>
