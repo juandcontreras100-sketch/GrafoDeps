@@ -1,4 +1,5 @@
-﻿Módulos |V| = 8   Dependencias |E| = 8
+﻿examples/tienda creado
+Módulos |V| = 8   Dependencias |E| = 8
 Dependencias circulares: 1
   tienda.impuestos -> tienda.precios -> tienda.impuestos
 Orden de construcción: no existe (hay ciclos)
@@ -26,10 +27,13 @@ Valencias (entrada/salida):
   tienda.precios: δe=2 δs=1
   tienda.usuarios: δe=1 δs=1
 Camino: tienda.main -> tienda.carrito -> tienda.precios -> tienda.impuestos
-Módulos |V| = 22   Dependencias |E| = 16
+Módulos |V| = 28   Dependencias |E| = 19
 Dependencias circulares: 0
-Orden de construcción: grafodeps.scanner , tests.test_scanner , grafodeps.model , grafodeps.render , grafodeps.cli , tests.test_render_cli , tests.conftest , tests.test_performance , tests.test_model , tests , scripts.make_demo , scripts.benchmark , scripts , grafodeps , examples.tienda.usuarios , examples.tienda.impuestos , examples.tienda.precios , examples.tienda.notificaciones , examples.tienda.main , examples.tienda.inventario , examples.tienda.carrito , examples.tienda
+Orden de construcción: grafodeps.scanner , grafodeps.model , grafodeps.webapp , tests.test_webapp , tests.test_scanner , tests.test_report_tools , grafodeps.render , grafodeps.cli , tests.test_render_cli , tests.conftest , tests.test_performance , tests.test_model , tests , scripts.make_demo , scripts.benchmark , scripts , grafodeps , examples.tienda.usuarios , examples.tienda.impuestos , examples.tienda.precios , examples.tienda.notificaciones , examples.tienda.main , examples.tienda.inventario , examples.tienda.carrito , examples.tienda , docs.informe.make_diagrams , docs.informe.check_report , docs.informe.build_report
 Valencias (entrada/salida):
+  docs.informe.build_report: δe=0 δs=0
+  docs.informe.check_report: δe=0 δs=0
+  docs.informe.make_diagrams: δe=0 δs=0
   examples.tienda: δe=0 δs=0
   examples.tienda.carrito: δe=0 δs=0
   examples.tienda.impuestos: δe=1 δs=0
@@ -40,9 +44,10 @@ Valencias (entrada/salida):
   examples.tienda.usuarios: δe=0 δs=0
   grafodeps: δe=0 δs=0
   grafodeps.cli: δe=1 δs=3
-  grafodeps.model: δe=6 δs=0
+  grafodeps.model: δe=7 δs=0
   grafodeps.render: δe=2 δs=1
-  grafodeps.scanner: δe=5 δs=0
+  grafodeps.scanner: δe=6 δs=0
+  grafodeps.webapp: δe=1 δs=2
   scripts: δe=0 δs=0
   scripts.benchmark: δe=0 δs=2
   scripts.make_demo: δe=0 δs=0
@@ -51,9 +56,21 @@ Valencias (entrada/salida):
   tests.test_model: δe=0 δs=2
   tests.test_performance: δe=0 δs=3
   tests.test_render_cli: δe=0 δs=3
+  tests.test_report_tools: δe=0 δs=0
   tests.test_scanner: δe=0 δs=1
-Imagen guardada en docs/informe/img/grafo_autoanalisis.png
+  tests.test_webapp: δe=0 δs=1
 Módulos: 51  Aristas: 144
-Tiempo medio de 5 corridas: 0.0150 s   (RNF-01: < 5 s)
-............                                                             [100%]
-12 passed in 1.18s
+Tiempo medio de 5 corridas: 0.0174 s   (RNF-01: < 5 s)
+Tiempo máximo de 5 corridas: 0.0387 s
+.........................                                                [100%]
+25 passed in 4.43s
+
+Figura 5 — subgrafo del paquete principal grafodeps, obtenido del análisis del repositorio:
+Módulos: 6  Dependencias: 6  Ciclos: 0
+La figura se regeneró filtrando el autoanálisis a `grafodeps` y sus submódulos.
+
+Explorador web local:
+python -m grafodeps.webapp --port 8765
+GET /: 200
+POST /api/analyze con {"project":"examples"}: 8 módulos, 8 dependencias y 1 ciclo
+Verificación manual en navegador: búsqueda y selección de módulo, detalle de valencias/dependencias, selección de ciclo, restablecer vista y exportar PNG (firma PNG válida).
